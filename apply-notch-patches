@@ -5,7 +5,8 @@ SPARSE="system.img"
 RAW="system.raw.img"
 PATCHED="system.patched.img"
 MNTPOINT="/mnt/"
-DIFF="Patches/dipper.patch"
+DIFF="$(pwd)/Patches/dipper.patch"
+WORKDIR="$(pwd)"
 
 if [ $UID -ne 0 ]; then
 	echo ">>ERROR: Please run this script as root/sudo!"
@@ -31,6 +32,7 @@ if ! hash patch 2>/dev/null; then
 	exit 1
 fi
 
+cd /
 # Applying patch
 if ! patch -p0 < $DIFF; then
 	echo ">> ERROR: Some system files are incompatible with the patches;
@@ -38,12 +40,13 @@ if ! patch -p0 < $DIFF; then
 	exit 1
 fi
 echo "Patch applied successfully!"
+cd $WORKDIR
 
 umount $MNTPOINT
 img2simg $RAW $PATCHED
 
 echo "Cloning img2sdat tool"
-if ! -d $(pwd)/img2sdat/; then
+if [ ! -d $(pwd)/img2sdat/ ]; then
 	git clone https://github.com/xpirt/img2sdat.git img2sdat
 fi
 

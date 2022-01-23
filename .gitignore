@@ -4,3 +4,5 @@ recovery.img
 img2sdat/
 tmp/
 out/
+system.patched.img
+system.raw.img
