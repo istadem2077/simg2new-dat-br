@@ -1,0 +1,75 @@
+Only in /mnt/usr/share/unity8/: ApplicationMenus
+Only in /mnt/usr/share/unity8/: Components
+Only in /mnt/usr/share/unity8/: DeviceConfiguration.qml
+Only in .: dipper.patch
+Only in /mnt/usr/share/unity8/: DisabledScreenNotice.qml
+Only in /mnt/usr/share/unity8/: graphics
+Only in /mnt/usr/share/unity8/: Greeter
+Only in /mnt/usr/share/unity8/: Launcher
+Only in /mnt/usr/share/unity8/: Notifications
+Only in /mnt/usr/share/unity8/: OrientedShell.qml
+Only in /mnt/usr/share/unity8/Panel: ActiveCallHint.qml
+Only in /mnt/usr/share/unity8/Panel: FakePanelMenu.qml
+Only in /mnt/usr/share/unity8/Panel: graphics
+Only in /mnt/usr/share/unity8/Panel: Indicators
+Only in /mnt/usr/share/unity8/Panel: MenuContent.qml
+diff -ru /mnt/usr/share/unity8/Panel/PanelBar.qml ./Panel/PanelBar.qml
+--- /mnt/usr/share/unity8/Panel/PanelBar.qml	2022-01-20 00:00:07.000000000 +0400
++++ ./Panel/PanelBar.qml	2022-01-23 13:26:11.703702682 +0400
+@@ -194,6 +194,9 @@
+             rotation: root.alignment != Qt.AlignRight ? 0 : 180
+ 
+             anchors.fill: parent
++            // HAX: offset items to match expanded panel mode while oriented upright
++            // FIXME: make it possible to scroll using the empty space above
++            anchors.topMargin: (expanded && shell.orientationAngle == 0) ? 80 : 0
+             contentWidth: row.width
+             contentX: d.combinedOffset
+             interactive: false
+Only in /mnt/usr/share/unity8/Panel: PanelItemRow.qml
+Only in /mnt/usr/share/unity8/Panel: PanelMenuPage.qml
+diff -ru /mnt/usr/share/unity8/Panel/PanelMenu.qml ./Panel/PanelMenu.qml
+--- /mnt/usr/share/unity8/Panel/PanelMenu.qml	2022-01-20 00:00:07.000000000 +0400
++++ ./Panel/PanelMenu.qml	2022-01-23 13:26:44.017035239 +0400
+@@ -178,6 +178,8 @@
+         anchors {
+             left: parent.left
+             right: parent.right
++            // HAX: extra margin for right side of curved screen corners
++            rightMargin: expanded ? 0 : units.gu(1.8)
+         }
+         expanded: false
+         enableLateralChanges: false
+diff -ru /mnt/usr/share/unity8/Panel/Panel.qml ./Panel/Panel.qml
+--- /mnt/usr/share/unity8/Panel/Panel.qml	2022-01-20 00:00:07.000000000 +0400
++++ ./Panel/Panel.qml	2022-01-23 13:25:43.580370015 +0400
+@@ -333,7 +333,8 @@
+             id: panelTitleHolder
+             anchors {
+                 left: parent.left
+-                leftMargin: units.gu(1)
++                // HAX: extra margin for left side of curved screen corners
++                leftMargin: units.gu(1.8)
+                 right: __indicators.left
+                 rightMargin: units.gu(1)
+             }
+Only in /mnt/usr/share/unity8/Panel: PanelVelocityCalculator.qml
+Only in /mnt/usr/share/unity8/: Rotation
+diff -ru /mnt/usr/share/unity8/Shell.qml ./Shell.qml
+--- /mnt/usr/share/unity8/Shell.qml	2022-01-20 00:00:07.000000000 +0400
++++ ./Shell.qml	2022-01-23 13:26:56.487034945 +0400
+@@ -543,8 +543,9 @@
+             anchors.fill: parent //because this draws indicator menus
+ 
+             mode: shell.usageScenario == "desktop" ? "windowed" : "staged"
+-            minimizedPanelHeight: units.gu(3)
+-            expandedPanelHeight: units.gu(7)
++            //HAX: match panel height with notch & add extra space for it in expanded mode
++            minimizedPanelHeight: units.gu(4.2)
++            expandedPanelHeight: units.gu(7) + (shell.orientationAngle == 0 ? minimizedPanelHeight : 0)
+             applicationMenuContentX: launcher.lockedVisible ? launcher.panelWidth : 0
+ 
+             indicators {
+Only in /mnt/usr/share/unity8/: Stage
+Only in /mnt/usr/share/unity8/: Tutorial
+Only in /mnt/usr/share/unity8/: Wizard
