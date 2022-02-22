@@ -14,13 +14,13 @@ if [ $UID -ne 0 ]; then
 fi
 
 
-if [ hash apt 2>/dev/null ]; then # Debian
+if command -v apt &> /dev/null; then # Debian
 	apt install simg2img img2simg brotli patch python-is-python3 wget
-elif [ hash dnf 2>/dev/null ]; then # Fedora
+elif command -v dnf &> /dev/null; then # Fedora
 	dnf install brotli patch python-is-python3 simg2img img2simg wget
-elif [ hash pacman 2>/dev/null ]; then # Arch Linux
+elif command -v pacman &> /dev/null; then # Arch Linux
 	pacman -Sy brotli patch android-tools wget
-elif [ hash zypper 2>/dev/null ]; then # openSUSE
+elif command -v zypper &> /dev/null; then # openSUSE
 	zypper install brotli patch android-tools wget
 fi
 
