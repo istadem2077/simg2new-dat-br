@@ -21,16 +21,18 @@ if [ $UID -ne 0 ]; then
 fi
 
 
-if [ ! hash simg2img 2>/dev/null ] || [ ! hash img2simg 2>/dev/null ] || [ ! hash brotli 2>/dev/null ] || [ ! hash patch 2>/dev/null ] && [ ! -e /usr/bin/apt ]; then
-	echo ">>ERROR: 'simg2img', 'img2simg', 'brotli' 'patch' 'curl'  are not found! Please install 'patch' 'curl' 'android-tools' and 'brotli'!"
-	exit 1
-
-elif [ -e /usr/bin/apt ]; then
-	apt install simg2img img2simg brotli curl patch python-is-python3
-
+if [ hash apt 2>/dev/null ]; then # Debian
+	apt install simg2img img2simg brotli patch python-is-python3 wget
+elif [ hash dnf 2>/dev/null ]; then # Fedora
+	dnf install brotli patch python-is-python3 simg2img img2simg wget
+elif [ hash pacman 2>/dev/null ]; then # Arch Linux
+	pacman -Sy brotli patch android-tools wget
+elif [ hash zypper 2>/dev/null ]; then # openSUSE
+	zypper install brotli patch android-tools wget
 fi
 
-	
+
+
 if [ ! -e $SPARSE ]; then
 	echo "ERROR: No system.img found! Put this script near system.img!"
 	exit 1
@@ -83,8 +85,8 @@ fi
 
 if [ ! -e ./${PEAMIXMZIP} ] && [ ! -e ./${PEACNXMZIP} ]; then
 	echo "Getting ZIPs"
-	curl -k -O $PEAMIXM
-	curl -k -O $PEACNXM
+	wget -k -O $PEAMIXM
+	wget -k -O $PEACNXM
 fi
 
 echo "Unzipping" 
