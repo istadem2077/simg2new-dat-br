@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+if [ ! -d $WORKDIR/img2sdat/ ]; then
+    echo "Cloning img2sdat tool"
+	git clone https://github.com/xpirt/img2sdat.git img2sdat
+fi
+
+# Cleaning up
+echo "Cleaning up!"
+rm -rf out/
+
+if [ ! -d $WORKDIR/out/ ] || [ ! -d $WORKDIR/tmp/ ] [ ! -d $WORKDIR/origin ] ; then
+	mkdir -p out/
+	mkdir -p origin/
+	mkdir -p tmp/
+fi
+
+mv $SPARSE origin/system.img
+mv $PATCHED $SPARSE # Replace original system.img with new patched one
+
+echo "Converting .img to .dat"
+./img2sdat/img2sdat.py $SPARSE -o out/ -v 4 # Convert .img to .new.dat
+
+# Compress system package in brotli LVL 9
+if [ -e out/system.new.dat ] && [ -e out/system.patch.dat ] && [ -e out/system.transfer.list ]; then
+	echo "Compressing image with brotli LVL 9!"
+	brotli -9f out/system.new.dat
+else
+	echo "ERROR: Files not found!"
+	exit 1
+fi

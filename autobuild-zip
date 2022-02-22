@@ -1,19 +1,12 @@
 #!/bin/bash
 set -e
 
-
-PEAMIXM="https://objects.githubusercontent.com/github-production-release-asset-2e65be/415702373/c7d1861a-c335-42fc-974c-92b016a4dc2c?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20220222%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220222T160045Z&X-Amz-Expires=300&X-Amz-Signature=44ff806c169ea27484b1b1504d7bae810032ab2b67d5f155efbdf87a0283772f&X-Amz-SignedHeaders=host&actor_id=46377455&key_id=0&repo_id=415702373&response-content-disposition=attachment%3B%20filename%3Dubuntu-touch-v21.1.PEAMIXM.zip&response-content-type=application%2Foctet-stream"
-PEAMIXMZIP="ubuntu-touch-v21.1.PEAMIXM.zip"
-
-PEACNXM="https://objects.githubusercontent.com/github-production-release-asset-2e65be/415702373/d0f24171-187e-410a-89e1-4750598c40e0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20220222%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220222T160042Z&X-Amz-Expires=300&X-Amz-Signature=5e5848b9d7280b426927f88a01304589fb90e7ed9d311ff8d78c91974557d938&X-Amz-SignedHeaders=host&actor_id=46377455&key_id=0&repo_id=415702373&response-content-disposition=attachment%3B%20filename%3Dubuntu-touch-v21.1.PEACNXM.zip&response-content-type=application%2Foctet-stream"
-PEACNXMZIP="ubuntu-touch-v21.1.PEAMIXM.zip"
-
-SPARSE="system.img"
-RAW="system.raw.img"
-PATCHED="system.patched.img"
-MNTPOINT="/mnt/"
-DIFF="$(pwd)/Patches/dipper.patch"
-WORKDIR="$(pwd)"
+export SPARSE="system.img"
+export RAW="system.raw.img"
+export PATCHED="system.patched.img"
+export MNTPOINT="/mnt/"
+export DIFF="$(pwd)/Patches/dipper.patch"
+export WORKDIR="$(pwd)"
 
 if [ $UID -ne 0 ]; then
 	echo ">>ERROR: Please run this script as root/sudo!"
@@ -32,75 +25,12 @@ elif [ hash zypper 2>/dev/null ]; then # openSUSE
 fi
 
 
-
 if [ ! -e $SPARSE ]; then
 	echo "ERROR: No system.img found! Put this script near system.img!"
 	exit 1
 fi
 
-simg2img $SPARSE $RAW # Converting sparse system.img to raw ext4 system.raw.img
-mount $RAW $MNTPOINT # Mount raw image
-
-cd /
-echo "Applying patch"
-if ! patch -p0 < $DIFF; then
-	echo ">> ERROR: Some system files are incompatible with the patches;
-          Please adjust '$DIFF' and try again!"
-	exit 1
-fi
-echo "Patch applied successfully!"
-cd $WORKDIR
-
-umount $MNTPOINT
-img2simg $RAW $PATCHED
-
-echo "Cloning img2sdat tool"
-if [ ! -d $(pwd)/img2sdat/ ]; then
-	git clone https://github.com/xpirt/img2sdat.git img2sdat
-fi
-
-# Cleaning up
-echo "Cleaning up!"
-rm -rf out/
-
-if [ ! -d $(pwd)/out/ ] || [ ! -d $(pwd)/tmp/ ] ; then
-	mkdir -p out/
-	mkdir -p origin/
-fi
-
-mv $SPARSE origin/system.img
-mv $PATCHED $SPARSE # Replace original system.img with new patched one
-
-echo "Converting .img to .dat"
-./img2sdat/img2sdat.py $SPARSE -o out/ -v 4 # Convert .img to .new.dat
-
-# Compress system package in brotli LVL 9
-if [ -e out/system.new.dat ] && [ -e out/system.patch.dat ] && [ -e out/system.transfer.list ]; then
-	echo "Compressing image with brotli LVL 9!"
-	brotli -9kf out/system.new.dat
-else
-	echo "ERROR: Files not found!"
-	exit 1
-fi
-
-if [ ! -e ./${PEAMIXMZIP} ] && [ ! -e ./${PEACNXMZIP} ]; then
-	echo "Getting ZIPs"
-	wget -k -O $PEAMIXM
-	wget -k -O $PEACNXM
-fi
-
-echo "Unzipping" 
-unzip -v -o $PEAMIXMZIP -d peamixm/
-unzip -v -o $PEACNXMZIP -d peacnxm/
-
-echo "Copying system files"
-cp out/* peamixm/
-cp boot.img peamixm/firmware-update/
-
-cp out/* peacnxm/
-cp boot.img peacnxm/firmware-update
-
-echo "Packing zip"
-zip -r peamixm/*
-zip -r peacnxm/*
+./patchsystem
+./prepare-system-files
+./create-zip
 
