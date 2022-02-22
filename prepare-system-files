@@ -26,6 +26,7 @@ echo "Converting .img to .dat"
 if [ -e out/system.new.dat ] && [ -e out/system.patch.dat ] && [ -e out/system.transfer.list ]; then
 	echo "Compressing image with brotli LVL 9!"
 	brotli -9f out/system.new.dat
+	rm out/system.new.dat
 else
 	echo "ERROR: Files not found!"
 	exit 1

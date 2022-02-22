@@ -25,5 +25,8 @@ cp out/* peacnxm/
 cp boot.img peacnxm/firmware-update/
 
 echo "Packing zip"
-zip -r peamixm/* > ubuntu-touch-v22.PEAMIXM.zip
-zip -r peacnxm/* > ubuntu-touch-v22.PEACNXM.zip
+cd $WORKDIR/peamixm/
+zip -r ubuntu-touch-v22.PEAMIXM.zip ./.
+
+cd $WORKDIR/peacnxm/
+zip -r ubuntu-touch-v22.PEACNXM.zip ./.

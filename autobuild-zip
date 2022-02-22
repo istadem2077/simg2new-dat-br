@@ -30,7 +30,7 @@ if [ ! -e $SPARSE ]; then
 	exit 1
 fi
 
-./patchsystem
+./patch-system
 ./prepare-system-files
 ./create-zip
 
