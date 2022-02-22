@@ -1,5 +1,5 @@
 # simg2new-dat-br
-This is a script for automation of creation system.new.dat.br and other files.
+This is a script for automatic installable zip building.(this variant is for dipper, but you can modify for your own device/purpose)
 
 ## Prerequisites:
     patch
@@ -8,7 +8,7 @@ This is a script for automation of creation system.new.dat.br and other files.
     brotli
     img2sdat(will be downloaded automatically if not found)
     
-Place this script near in same directory with system.img(preferably clear directory, with system.img only) and run the script.
+Clone repo, place system.img and boot.img near script and run script as sudo, it will do everything on its own.
 
 This script also includes notch patching, so if you have it, and want to apply patches, make sure that modifications are compatible with your phone!
 You can also comment out the part with patching. If you want you can create pull request with your own patches!
