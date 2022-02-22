@@ -1,0 +1,76 @@
+#!/bin/bash
+set -e
+
+SPARSE="system.img"
+RAW="system.raw.img"
+PATCHED="system.patched.img"
+MNTPOINT="/mnt/"
+DIFF="$(pwd)/Patches/dipper.patch"
+WORKDIR="$(pwd)"
+
+if [ $UID -ne 0 ]; then
+	echo ">>ERROR: Please run this script as root/sudo!"
+	exit 1
+fi
+
+if [ ! hash simg2img 2>/dev/null ] || [ ! hash img2simg 2>/dev/null ] || [ ! hash brotli 2>/dev/null ]; then
+	echo ">>ERROR: 'simg2img', 'img2simg', 'brotli' are not found! Please install 'android-tools'(see for you distribution) and 'brotli'!"
+	exit 1
+fi
+	
+if [ ! -e $SPARSE ]; then
+	echo "ERROR: No system.img found! Put this script near system.img!"
+	exit 1
+fi
+
+simg2img $SPARSE $RAW # Converting sparse system.img to raw ext4 system.raw.img
+mount $RAW $MNTPOINT # Mount raw image
+
+# Checking if "patch" is installed
+if ! hash patch 2>/dev/null; then
+	echo ">> System utility 'patch' not found! Please install 'patch'!"
+	exit 1
+fi
+
+cd /
+# Applying patch
+if ! patch -p0 < $DIFF; then
+	echo ">> ERROR: Some system files are incompatible with the patches;
+          Please adjust '$DIFF' and try again!"
+	exit 1
+fi
+echo "Patch applied successfully!"
+cd $WORKDIR
+
+umount $MNTPOINT
+img2simg $RAW $PATCHED
+
+echo "Cloning img2sdat tool"
+if [ ! -d $(pwd)/img2sdat/ ]; then
+	git clone https://github.com/xpirt/img2sdat.git img2sdat
+fi
+
+# Cleaning up
+echo "Cleaning up!"
+rm -rf out/ tmp/
+
+if [ ! -d $(pwd)/out/ ] || [ ! -d $(pwd)/tmp/ ] ; then
+	mkdir -p out/
+	mkdir -p tmp/
+fi
+
+mv $SPARSE tmp/system.img
+mv $PATCHED $SPARSE # Replace original system.img with new patched one
+
+echo "Converting .img to .dat"
+./img2sdat/img2sdat.py $SPARSE -o out/ -v 4 # Convert .img to .new.dat
+
+# Compress system package in brotli LVL 9
+if [ -e out/system.new.dat ] && [ -e out/system.patch.dat ] && [ -e out/system.transfer.list ]; then
+	echo "Compressing image with brotli LVL 9!"
+	brotli -9kf out/system.new.dat
+else
+	echo "ERROR: Files not found!"
+	exit 1
+fi
+
