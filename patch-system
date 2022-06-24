@@ -6,13 +6,13 @@ mount $RAW $MNTPOINT # Mount raw image
 
 cd /
 echo "Applying patch"
-if ! patch -p0 < $DIFF; then
+if ! patch -p1 < $DIFF; then
 	echo ">> ERROR: Some system files are incompatible with the patches;
           Please adjust '$DIFF' and try again!"
 	exit 1
 fi
 echo "Patch applied successfully!"
-cd $WORKDIR
+cd $PWD
 
 umount $MNTPOINT
 img2simg $RAW $PATCHED

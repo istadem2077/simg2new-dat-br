@@ -7,7 +7,7 @@ PEAMIXMZIP="ubuntu-touch-v21.1.PEAMIXM.zip"
 PEACNXM="https://objects.githubusercontent.com/github-production-release-asset-2e65be/415702373/d0f24171-187e-410a-89e1-4750598c40e0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20220222%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220222T160042Z&X-Amz-Expires=300&X-Amz-Signature=5e5848b9d7280b426927f88a01304589fb90e7ed9d311ff8d78c91974557d938&X-Amz-SignedHeaders=host&actor_id=46377455&key_id=0&repo_id=415702373&response-content-disposition=attachment%3B%20filename%3Dubuntu-touch-v21.1.PEACNXM.zip&response-content-type=application%2Foctet-stream"
 PEACNXMZIP="ubuntu-touch-v21.1.PEACNXM.zip"
 
-if [ ! -e ./${PEAMIXMZIP} ] && [ ! -e ./${PEACNXMZIP} ]; then
+if [ ! -e $PWD/${PEAMIXMZIP} ] && [ ! -e $PWD/${PEACNXMZIP} ]; then
 	echo "Getting ZIPs"
 	wget -k -O $PEAMIXM
 	wget -k -O $PEACNXM
@@ -25,8 +25,8 @@ cp out/* peacnxm/
 cp boot.img peacnxm/firmware-update/
 
 echo "Packing zip"
-cd $WORKDIR/peamixm/
-zip -r ubuntu-touch-v22.PEAMIXM.zip ./.
+cd $PWD/peamixm/
+zip -r ubuntu-touch-v23.PEAMIXM.zip ./.
 
-cd $WORKDIR/peacnxm/
-zip -r ubuntu-touch-v22.PEACNXM.zip ./.
+cd $PWD/peacnxm/
+zip -r ubuntu-touch-v23.PEACNXM.zip ./.

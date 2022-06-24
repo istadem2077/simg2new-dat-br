@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
+export PWD="$(pwd)" # Need to save current directory, later in script it's needed to get back here.
 export SPARSE="system.img"
 export RAW="system.raw.img"
 export PATCHED="system.patched.img"
 export MNTPOINT="/mnt/"
-export DIFF="$(pwd)/Patches/dipper.patch"
-export WORKDIR="$(pwd)"
+export DIFF="$PWD/Patches/dipper.diff"
 
 if [ $UID -ne 0 ]; then
 	echo ">>ERROR: Please run this script as root/sudo!"
@@ -30,7 +30,7 @@ if [ ! -e $SPARSE ]; then
 	exit 1
 fi
 
-./patch-system
-./prepare-system-files
-./create-zip
+$PWD/patch-system
+$PWD/prepare-system-files
+$PWD/create-zip
 

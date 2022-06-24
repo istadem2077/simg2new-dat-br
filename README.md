@@ -1,4 +1,4 @@
-# simg2new-dat-br
+# simg2zip
 This is a script for automatic installable zip building.(this variant is for dipper, but you can modify for your own device/purpose)
 
 ## Prerequisites:
