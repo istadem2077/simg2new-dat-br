@@ -1,4 +1,4 @@
-boot.img
+﻿boot.img
 system.img
 recovery.img
 img2sdat/
@@ -8,6 +8,6 @@ system.patched.img
 system.raw.img
 peacnxm/
 peamixm/
-ubuntu-touch-v21.1.PEACNXM.zip
-ubuntu-touch-v21.1.PEAMIXM.zip
+ubuntu-touch-v22.PEACNXM.zip
+ubuntu-touch-v22.PEAMIXM.zip
 

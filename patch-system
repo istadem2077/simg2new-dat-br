@@ -12,7 +12,10 @@ if ! patch -p1 < $DIFF; then
 	exit 1
 fi
 echo "Patch applied successfully!"
-cd $PWD
+
+echo "Going back to $PWD"
+cd - 
+echo $(pwd)
 
 umount $MNTPOINT
-img2simg $RAW $PATCHED
+img2simg $PWD/$RAW $PATCHED

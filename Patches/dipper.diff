@@ -1,6 +1,6 @@
 diff --color -ru a/usr/share/unity8/Panel/Panel.qml b/usr/share/unity8/Panel/Panel.qml
---- a/usr/share/unity8/Panel/Panel.qml	2021-01-14 18:25:16.111002000 +0200
-+++ b/usr/share/unity8/Panel/Panel.qml	2021-01-18 01:02:19.474405133 +0200
+--- a/mnt/usr/share/unity8/Panel/Panel.qml	2021-01-14 18:25:16.111002000 +0200
++++ b/mnt/usr/share/unity8/Panel/Panel.qml	2021-01-18 01:02:19.474405133 +0200
 @@ -333,7 +333,8 @@
              id: panelTitleHolder
              anchors {
@@ -12,8 +12,8 @@ diff --color -ru a/usr/share/unity8/Panel/Panel.qml b/usr/share/unity8/Panel/Pan
                  rightMargin: units.gu(1)
              }
 diff --color -ru a/usr/share/unity8/Panel/PanelBar.qml b/usr/share/unity8/Panel/PanelBar.qml
---- a/usr/share/unity8/Panel/PanelBar.qml	2021-01-14 18:25:16.111002000 +0200
-+++ b/usr/share/unity8/Panel/PanelBar.qml	2021-01-18 01:03:08.354367701 +0200
+--- a/mnt/usr/share/unity8/Panel/PanelBar.qml	2021-01-14 18:25:16.111002000 +0200
++++ b/mnt/usr/share/unity8/Panel/PanelBar.qml	2021-01-18 01:03:08.354367701 +0200
 @@ -194,6 +194,9 @@
              rotation: root.alignment != Qt.AlignRight ? 0 : 180
  
@@ -25,8 +25,8 @@ diff --color -ru a/usr/share/unity8/Panel/PanelBar.qml b/usr/share/unity8/Panel/
              contentX: d.combinedOffset
              interactive: false
 diff --color -ru a/usr/share/unity8/Panel/PanelMenu.qml b/usr/share/unity8/Panel/PanelMenu.qml
---- a/usr/share/unity8/Panel/PanelMenu.qml	2021-01-14 18:25:16.111002000 +0200
-+++ b/usr/share/unity8/Panel/PanelMenu.qml	2021-01-18 01:03:28.394353418 +0200
+--- a/mnt/usr/share/unity8/Panel/PanelMenu.qml	2021-01-14 18:25:16.111002000 +0200
++++ b/mnt/usr/share/unity8/Panel/PanelMenu.qml	2021-01-18 01:03:28.394353418 +0200
 @@ -178,6 +178,8 @@
          anchors {
              left: parent.left
@@ -37,8 +37,8 @@ diff --color -ru a/usr/share/unity8/Panel/PanelMenu.qml b/usr/share/unity8/Panel
          expanded: false
          enableLateralChanges: false
 diff --color -ru a/usr/share/unity8/Shell.qml b/usr/share/unity8/Shell.qml
---- a/usr/share/unity8/Shell.qml	2021-01-14 18:25:16.111002000 +0200
-+++ b/usr/share/unity8/Shell.qml	2021-01-18 01:04:10.604325216 +0200
+--- a/mnt/usr/share/unity8/Shell.qml	2021-01-14 18:25:16.111002000 +0200
++++ b/mnt/usr/share/unity8/Shell.qml	2021-01-18 01:04:10.604325216 +0200
 @@ -519,8 +519,9 @@
              anchors.fill: parent //because this draws indicator menus
  

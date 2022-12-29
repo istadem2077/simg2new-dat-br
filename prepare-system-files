@@ -16,6 +16,7 @@ if [ ! -d $PWD/out/ ] || [ ! -d $PWD/tmp/ ] [ ! -d $PWD/origin ] ; then
 	mkdir -p tmp/
 fi
 
+echo "Backing up original system.img"
 mv $SPARSE origin/system.img # Backup original system.img
 mv $PATCHED $SPARSE # Replace original system.img with new patched one
 
@@ -30,3 +31,4 @@ else
 	echo "ERROR: Files not found!"
 	exit 1
 fi
+
